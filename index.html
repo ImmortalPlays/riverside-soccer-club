@@ -39,29 +39,29 @@
     a { color: var(--green-dark); }
 
     /* ---------- FILM-ROLL COLLAGE BACKGROUND ----------
-       A fixed white backdrop holding several horizontal "film strips" of
-       photos that scroll sideways. It sits behind everything; the page
-       sections above are slightly see-through, so the photos show faintly.
-       Built by the script at the bottom from the photos in /Images. */
+       A fixed white backdrop holding several VERTICAL "film strips" of photos
+       that drift slowly up/down. It sits behind everything; the page sections
+       above are slightly see-through, so the photos show faintly. Built by
+       the script at the bottom from the photos in /Images. */
     .collage {
       position: fixed; inset: 0; z-index: -2; overflow: hidden;
       background: #ffffff;            /* white fills gaps between photos */
-      display: flex; flex-direction: column; gap: 6px;
+      display: flex; flex-direction: row; gap: 6px;
       pointer-events: none;
     }
     .collage .strip {
-      flex: 1; min-height: 0;
-      display: flex; align-items: center; gap: 8px;
-      width: max-content;
-      animation: scrollA 70s linear infinite;
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      height: max-content;
+      animation: scrollA 150s linear infinite;   /* slow drift */
     }
     .collage .strip.rev { animation-name: scrollB; }
     .collage .strip img {
-      height: 100%; width: auto; display: block;
+      width: 100%; height: auto; display: block;
       filter: saturate(0.95);
     }
-    @keyframes scrollA { from { transform: translateX(0); }            to { transform: translateX(-33.333%); } }
-    @keyframes scrollB { from { transform: translateX(-33.333%); }     to { transform: translateX(0); } }
+    @keyframes scrollA { from { transform: translateY(0); }            to { transform: translateY(-33.333%); } }
+    @keyframes scrollB { from { transform: translateY(-33.333%); }     to { transform: translateY(0); } }
     @media (prefers-reduced-motion: reduce) {
       .collage .strip { animation: none; }
     }
@@ -433,26 +433,26 @@
   </footer>
 
   <script>
-    // ===== Build the film-roll collage background =====
+    // ===== Build the film-roll collage background (vertical columns) =====
     // The 7 photos live in the /Images folder. Filenames have spaces, so we
-    // encode them. We make several horizontal strips, each holding the photo
-    // set repeated 3 times so it can scroll forever without a visible seam.
+    // encode them. We make several vertical columns, each holding the photo
+    // set repeated 3 times so it can drift forever without a visible seam.
     (function buildCollage() {
       const files = [
         'images.jpg', 'images (1).jpg', 'images (2).jpg', 'images (3).jpg',
         'images (4).jpg', 'images (5).jpg', 'images (6).jpg'
       ];
       const collage = document.getElementById('collage');
-      const STRIPS = 6;
-      for (let s = 0; s < STRIPS; s++) {
+      const COLUMNS = 5;
+      for (let s = 0; s < COLUMNS; s++) {
         const strip = document.createElement('div');
         strip.className = 'strip' + (s % 2 ? ' rev' : '');
-        strip.style.animationDuration = (62 + s * 9) + 's';   // vary speed per row
-        // vary the order a little so rows don't line up
+        strip.style.animationDuration = (150 + s * 22) + 's';   // slow; varies per column
+        // vary the order a little so columns don't line up
         let order = files.slice();
         for (let r = 0; r < s; r++) order.push(order.shift());
         if (s % 2) order.reverse();
-        const seq = order.concat(order, order);               // 3 copies for seamless loop
+        const seq = order.concat(order, order);                 // 3 copies for seamless loop
         seq.forEach((name) => {
           const img = document.createElement('img');
           img.src = encodeURI('Images/' + name);
