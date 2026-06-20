@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riverside Soccer Club — Community Youth Soccer</title>
+  <meta name="description" content="Riverside Soccer Club: community youth soccer for ages 5–14. Schedules, registration, teams, and resources for players and parents." />
+
+  <style>
+    /* ---------- THEME ---------- */
+    :root {
+      --green: #15a34a;
+      --green-dark: #0f7a37;
+      --navy: #0c1f33;
+      --navy-soft: #16314c;
+      --gold: #f6c343;
+      --ink: #1f2937;
+      --muted: #5b6ب72;      /* fixed below */
+      --muted: #5b6b82;
+      --line: #e5e9f0;
+      --bg: #ffffff;
+      --bg-soft: #f5f8fb;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(12, 31, 51, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 22px; }
+    section { padding: 72px 0; }
+    .bg-soft { background: var(--bg-soft); }
+    h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--navy); margin-bottom: 10px; }
+    .lead { color: var(--muted); max-width: 640px; margin-bottom: 34px; }
+    .eyebrow { color: var(--green); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; }
+    a { color: var(--green-dark); }
+
+    /* ---------- BUTTONS ---------- */
+    .btn {
+      display: inline-block; font-weight: 700; text-decoration: none;
+      padding: 13px 26px; border-radius: 999px; cursor: pointer; border: 0;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+    .btn-gold { background: var(--gold); color: var(--navy); box-shadow: 0 8px 22px rgba(246, 195, 67, 0.4); }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(246, 195, 67, 0.55); }
+    .btn-green { background: var(--green); color: #fff; box-shadow: 0 8px 22px rgba(21, 163, 74, 0.35); }
+    .btn-green:hover { transform: translateY(-2px); background: var(--green-dark); }
+    .btn-ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.6); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.12); }
+
+    /* ---------- HEADER / NAV ---------- */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--navy); text-decoration: none; font-size: 1.1rem; }
+    .crest {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--green), var(--green-dark));
+      display: grid; place-items: center; color: #fff; font-size: 1rem;
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,0.25);
+    }
+    .nav-links { display: flex; align-items: center; gap: 22px; }
+    .nav-links a { color: var(--navy); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    .nav-links a:hover { color: var(--green); }
+    .nav-links .btn { color: #fff; }
+    .menu-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 8px; }
+    .menu-toggle span { display: block; width: 24px; height: 2px; background: var(--navy); margin: 5px 0; transition: 0.2s; }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      position: relative; color: #fff; overflow: hidden;
+      background:
+        radial-gradient(1200px 500px at 80% -10%, rgba(21,163,74,0.55), transparent 60%),
+        linear-gradient(160deg, var(--navy) 0%, var(--navy-soft) 100%);
+    }
+    /* subtle pitch lines */
+    .hero::after {
+      content: ""; position: absolute; inset: 0; opacity: 0.08;
+      background-image: repeating-linear-gradient(90deg, #fff 0 2px, transparent 2px 90px);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; padding: 92px 0 84px; max-width: 720px; }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.08; margin-bottom: 16px; }
+    .hero h1 .hl { color: var(--gold); }
+    .hero p { font-size: 1.15rem; color: #d7e2ee; margin-bottom: 28px; }
+    .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+    .stats { display: flex; gap: 38px; margin-top: 44px; flex-wrap: wrap; }
+    .stat .num { font-size: 2rem; font-weight: 800; color: var(--gold); }
+    .stat .lbl { color: #cdd9e6; font-size: 0.9rem; }
+
+    /* ---------- GRIDS / CARDS ---------- */
+    .grid { display: grid; gap: 20px; }
+    .cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 26px; box-shadow: var(--shadow);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .card:hover { transform: translateY(-4px); border-color: var(--green); }
+    .card .ico { font-size: 1.8rem; margin-bottom: 10px; }
+    .card h3 { color: var(--navy); margin-bottom: 6px; }
+    .card p { color: var(--muted); font-size: 0.96rem; }
+
+    /* ---------- SCHEDULE TABLE ---------- */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; min-width: 520px; background: #fff; }
+    th, td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+    th { background: var(--navy); color: #fff; font-size: 0.9rem; letter-spacing: 0.03em; }
+    tr:last-child td { border-bottom: 0; }
+    td .tag { background: #e8f7ee; color: var(--green-dark); padding: 3px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+
+    /* ---------- AWARDS ---------- */
+    .awards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .award {
+      background: linear-gradient(160deg, #fff, #fffaf0);
+      border: 1px solid #f1e6c6; border-radius: var(--radius); padding: 26px; text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .award .trophy { font-size: 2.4rem; }
+    .award .yr { color: var(--green); font-weight: 800; margin-top: 6px; }
+    .award h3 { color: var(--navy); margin: 4px 0 6px; font-size: 1.1rem; }
+    .award p { color: var(--muted); font-size: 0.9rem; }
+
+    /* ---------- REGISTER STEPS ---------- */
+    .steps { counter-reset: step; display: grid; gap: 16px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; }
+    .step .n {
+      counter-increment: step; flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%;
+      background: var(--green); color: #fff; font-weight: 800; display: grid; place-items: center;
+    }
+    .step .n::before { content: counter(step); }
+    .step h4 { color: var(--navy); }
+    .step p { color: var(--muted); font-size: 0.95rem; }
+
+    /* ---------- FORM ---------- */
+    form { display: grid; gap: 14px; max-width: 520px; }
+    .field { display: grid; gap: 6px; }
+    label { font-weight: 600; color: var(--navy); font-size: 0.92rem; }
+    input, select, textarea {
+      font: inherit; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink);
+    }
+    input:focus, select:focus, textarea:focus { outline: 2px solid var(--green); border-color: var(--green); }
+    .form-note { color: var(--green-dark); font-weight: 600; display: none; }
+
+    /* ---------- CONTACT ---------- */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .coach { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+    .coach .av { width: 48px; height: 48px; border-radius: 50%; background: var(--navy); color: #fff; display: grid; place-items: center; font-weight: 800; }
+    .coach .role { color: var(--muted); font-size: 0.9rem; }
+
+    /* ---------- FOOTER ---------- */
+    footer { background: var(--navy); color: #cdd9e6; padding: 46px 0 30px; }
+    .foot-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    footer a { color: #cdd9e6; text-decoration: none; }
+    footer a:hover { color: #fff; }
+    .foot-bottom { border-top: 1px solid rgba(255,255,255,0.12); margin-top: 26px; padding-top: 18px; font-size: 0.85rem; color: #9fb1c4; }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 880px) {
+      .cols-3, .cols-4, .awards { grid-template-columns: 1fr 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .cols-2, .cols-3, .cols-4, .awards { grid-template-columns: 1fr; }
+      .nav-links {
+        position: absolute; top: 68px; left: 0; right: 0;
+        background: #fff; border-bottom: 1px solid var(--line);
+        flex-direction: column; align-items: stretch; gap: 0; padding: 8px 0;
+        display: none;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 12px 22px; }
+      .nav-links .btn { margin: 8px 22px; text-align: center; }
+      .menu-toggle { display: block; }
+      .stats { gap: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="wrap nav">
+      <a href="#home" class="brand"><span class="crest">⚽</span> Riverside SC</a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#teams">Teams</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#awards">Awards</a>
+        <a href="#resources">Resources</a>
+        <a href="#contact">Contact</a>
+        <a href="#register" class="btn btn-green">Register</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home" style="padding:0;">
+    <div class="wrap hero-inner">
+      <p class="eyebrow" style="color:var(--gold)">Community Youth Soccer · Ages 5–14</p>
+      <h1>Where Riverside kids <span class="hl">learn, play &amp; belong.</span></h1>
+      <p>180 players, 12 teams, one community. Find your child's team, check the schedule, and register for the season — all in one place.</p>
+      <div class="hero-cta">
+        <a href="#register" class="btn btn-gold">Register your player</a>
+        <a href="#schedule" class="btn btn-ghost">View schedule</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">180+</div><div class="lbl">Active players</div></div>
+        <div class="stat"><div class="num">12</div><div class="lbl">Teams</div></div>
+        <div class="stat"><div class="num">5–14</div><div class="lbl">Age range</div></div>
+        <div class="stat"><div class="num">8</div><div class="lbl">Years strong</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about">
+    <div class="wrap">
+      <p class="eyebrow">About the club</p>
+      <h2>More than a game — a Riverside tradition</h2>
+      <p class="lead">Riverside Soccer Club is a volunteer-run community club focused on fun, skill-building, and belonging. We welcome every kid, from first-time players to future stars.</p>
+      <div class="grid cols-3">
+        <div class="card"><div class="ico">🌟</div><h3>Everyone plays</h3><p>Equal playing time and a positive, pressure-free environment for ages 5–14.</p></div>
+        <div class="card"><div class="ico">🎓</div><h3>Real coaching</h3><p>Licensed volunteer coaches who teach the fundamentals and good sportsmanship.</p></div>
+        <div class="card"><div class="ico">🤝</div><h3>Community first</h3><p>Affordable fees, financial aid, and a club run by parents, for families.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TEAMS ===== -->
+  <section id="teams" class="bg-soft">
+    <div class="wrap">
+      <p class="eyebrow">Our teams</p>
+      <h2>Find your age division</h2>
+      <p class="lead">Players are grouped by age. Each team practices twice a week with games on Saturdays.</p>
+      <div class="grid cols-4">
+        <div class="card"><div class="ico">🐣</div><h3>Shooting Stars</h3><p>Ages 5–6 · First touch &amp; fun fundamentals.</p></div>
+        <div class="card"><div class="ico">⚡</div><h3>Lightning</h3><p>Ages 7–8 · Small-sided games, big smiles.</p></div>
+        <div class="card"><div class="ico">🔥</div><h3>Blaze</h3><p>Ages 9–10 · Skills, positions &amp; teamwork.</p></div>
+        <div class="card"><div class="ico">🦁</div><h3>Pride</h3><p>Ages 11–14 · Competitive league play.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCHEDULE ===== -->
+  <section id="schedule">
+    <div class="wrap">
+      <p class="eyebrow">Schedule</p>
+      <h2>Practices &amp; game days</h2>
+      <p class="lead">Swipe to see the full week. Games are Saturdays at Riverside Community Fields.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Team</th><th>Practice</th><th>Field</th><th>Game Day</th></tr></thead>
+          <tbody>
+            <tr><td>Shooting Stars (5–6)</td><td>Mon 4:30pm</td><td>Field A</td><td><span class="tag">Sat 9:00am</span></td></tr>
+            <tr><td>Lightning (7–8)</td><td>Tue &amp; Thu 5:00pm</td><td>Field B</td><td><span class="tag">Sat 10:30am</span></td></tr>
+            <tr><td>Blaze (9–10)</td><td>Mon &amp; Wed 5:30pm</td><td>Field C</td><td><span class="tag">Sat 12:00pm</span></td></tr>
+            <tr><td>Pride (11–14)</td><td>Tue &amp; Thu 6:00pm</td><td>Field A</td><td><span class="tag">Sat 1:30pm</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AWARDS ===== -->
+  <section id="awards" class="bg-soft">
+    <div class="wrap">
+      <p class="eyebrow">Awards &amp; honors</p>
+      <h2>A club to be proud of 🏆</h2>
+      <p class="lead">Our players and coaches have earned recognition on and off the field.</p>
+      <div class="awards">
+        <div class="award"><div class="trophy">🏆</div><div class="yr">2024</div><h3>Regional League Champions</h3><p>Pride (U14) took the Riverside Cup title.</p></div>
+        <div class="award"><div class="trophy">🥇</div><div class="yr">2023</div><h3>Club of the Year</h3><p>Awarded by the County Youth Soccer Association.</p></div>
+        <div class="award"><div class="trophy">🤝</div><div class="yr">2023</div><h3>Sportsmanship Award</h3><p>Recognized for fair play across all divisions.</p></div>
+        <div class="award"><div class="trophy">⭐</div><div class="yr">2022</div><h3>Coach of the Year</h3><p>Coach Maria honored for player development.</p></div>
+        <div class="award"><div class="trophy">📈</div><div class="yr">2022</div><h3>Most Improved Club</h3><p>Grew from 6 to 12 teams in two seasons.</p></div>
+        <div class="award"><div class="trophy">💚</div><div class="yr">2021</div><h3>Community Impact</h3><p>$15k in financial aid awarded to local families.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESOURCES ===== -->
+  <section id="resources">
+    <div class="wrap">
+      <p class="eyebrow">Resources</p>
+      <h2>Everything parents need</h2>
+      <p class="lead">Quick links to the things families ask about most.</p>
+      <div class="grid cols-3">
+        <a class="card" href="#" style="text-decoration:none"><div class="ico">📍</div><h3>Field Locations</h3><p>Maps &amp; directions to all Riverside fields.</p></a>
+        <a class="card" href="#" style="text-decoration:none"><div class="ico">📅</div><h3>Season Calendar</h3><p>Key dates, holidays, and tournament days.</p></a>
+        <a class="card" href="#" style="text-decoration:none"><div class="ico">❓</div><h3>FAQ</h3><p>Answers to the most common parent questions.</p></a>
+        <a class="card" href="#" style="text-decoration:none"><div class="ico">💳</div><h3>Financial Aid</h3><p>Scholarships so cost is never a barrier.</p></a>
+        <a class="card" href="#" style="text-decoration:none"><div class="ico">👕</div><h3>Uniforms &amp; Gear</h3><p>What to buy and where to get it.</p></a>
+        <a class="card" href="#" style="text-decoration:none"><div class="ico">📄</div><h3>Forms &amp; Waivers</h3><p>Medical, consent, and volunteer forms.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== REGISTER ===== -->
+  <section id="register" class="bg-soft">
+    <div class="wrap grid cols-2" style="align-items:start; gap:46px;">
+      <div>
+        <p class="eyebrow">Register</p>
+        <h2>Sign up in 3 easy steps</h2>
+        <p class="lead">Registration for the spring season is open. Spots fill fast!</p>
+        <div class="steps">
+          <div class="step"><div class="n"></div><div><h4>Pick a team</h4><p>Choose your child's age division above.</p></div></div>
+          <div class="step"><div class="n"></div><div><h4>Fill out the form</h4><p>Tell us about your player — takes 2 minutes.</p></div></div>
+          <div class="step"><div class="n"></div><div><h4>We'll be in touch</h4><p>A coordinator confirms your spot &amp; next steps.</p></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--navy); margin-bottom:14px;">Player registration</h3>
+        <form id="regForm">
+          <div class="field"><label for="parent">Parent / guardian name</label><input id="parent" name="parent" required /></div>
+          <div class="field"><label for="player">Player name &amp; age</label><input id="player" name="player" placeholder="e.g. Sam, age 9" required /></div>
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required /></div>
+          <div class="field"><label for="team">Preferred team</label>
+            <select id="team" name="team">
+              <option>Shooting Stars (5–6)</option>
+              <option>Lightning (7–8)</option>
+              <option>Blaze (9–10)</option>
+              <option>Pride (11–14)</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-green">Submit registration</button>
+          <p class="form-note" id="regNote">✅ Thanks! This is a demo form — on a live site this would email the club.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h2>Get in touch</h2>
+      <p class="lead">Questions? Reach a coordinator or coach — we're happy to help.</p>
+      <div class="contact-grid">
+        <div>
+          <div class="coach"><div class="av">M</div><div><strong>Coach Maria</strong><div class="role">Club Coordinator</div></div></div>
+          <div class="coach"><div class="av">J</div><div><strong>Coach James</strong><div class="role">Director of Coaching</div></div></div>
+          <div class="coach"><div class="av">📧</div><div><strong>info@riversidesc.org</strong><div class="role">General inquiries</div></div></div>
+          <div class="coach"><div class="av">📍</div><div><strong>Riverside Community Fields</strong><div class="role">100 Park Ave, Riverside</div></div></div>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--navy); margin-bottom:14px;">Send a message</h3>
+          <form id="contactForm">
+            <div class="field"><label for="cname">Your name</label><input id="cname" required /></div>
+            <div class="field"><label for="cmsg">Message</label><textarea id="cmsg" rows="4" required></textarea></div>
+            <button type="submit" class="btn btn-gold">Send message</button>
+            <p class="form-note" id="contactNote">✅ Thanks! This is a demo form — on a live site this would email the club.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div style="max-width:300px;">
+          <div class="brand" style="color:#fff; margin-bottom:8px;"><span class="crest">⚽</span> Riverside SC</div>
+          <p style="color:#9fb1c4; font-size:0.92rem;">Community youth soccer for ages 5–14. Learn, play &amp; belong.</p>
+        </div>
+        <div>
+          <strong style="color:#fff;">Explore</strong>
+          <p style="margin-top:8px;"><a href="#about">About</a></p>
+          <p><a href="#teams">Teams</a></p>
+          <p><a href="#schedule">Schedule</a></p>
+          <p><a href="#awards">Awards</a></p>
+        </div>
+        <div>
+          <strong style="color:#fff;">Resources</strong>
+          <p style="margin-top:8px;"><a href="#resources">Field locations</a></p>
+          <p><a href="#resources">Calendar</a></p>
+          <p><a href="#resources">FAQ</a></p>
+          <p><a href="#register">Register</a></p>
+        </div>
+      </div>
+      <div class="foot-bottom">© 2026 Riverside Soccer Club · Sample site designed by David Manson.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const toggle = document.getElementById('menuToggle');
+    const links = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+    links.addEventListener('click', (e) => { if (e.target.tagName === 'A') links.classList.remove('open'); });
+
+    // Demo forms — show a thank-you note instead of actually submitting
+    function demoForm(formId, noteId) {
+      const f = document.getElementById(formId);
+      const note = document.getElementById(noteId);
+      f.addEventListener('submit', (e) => {
+        e.preventDefault();
+        note.style.display = 'block';
+        f.querySelector('button').textContent = 'Submitted ✓';
+      });
+    }
+    demoForm('regForm', 'regNote');
+    demoForm('contactForm', 'contactNote');
+  </script>
+
+</body>
+</html>
