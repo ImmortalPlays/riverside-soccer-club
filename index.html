@@ -23,20 +23,48 @@
       --shadow: 0 10px 30px rgba(12, 31, 51, 0.08);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; background: #ffffff; }
     body {
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: var(--ink);
-      background: var(--bg);
+      background: transparent;       /* let the collage behind show through */
       line-height: 1.6;
     }
     .wrap { max-width: 1100px; margin: 0 auto; padding: 0 22px; }
-    section { padding: 72px 0; }
-    .bg-soft { background: var(--bg-soft); }
+    section { padding: 72px 0; background: rgba(255, 255, 255, 0.80); }  /* translucent -> faded photos peek through */
+    .bg-soft { background: rgba(244, 248, 251, 0.82); }
     h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--navy); margin-bottom: 10px; }
     .lead { color: var(--muted); max-width: 640px; margin-bottom: 34px; }
     .eyebrow { color: var(--green); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; }
     a { color: var(--green-dark); }
+
+    /* ---------- FILM-ROLL COLLAGE BACKGROUND ----------
+       A fixed white backdrop holding several horizontal "film strips" of
+       photos that scroll sideways. It sits behind everything; the page
+       sections above are slightly see-through, so the photos show faintly.
+       Built by the script at the bottom from the photos in /Images. */
+    .collage {
+      position: fixed; inset: 0; z-index: -2; overflow: hidden;
+      background: #ffffff;            /* white fills gaps between photos */
+      display: flex; flex-direction: column; gap: 6px;
+      pointer-events: none;
+    }
+    .collage .strip {
+      flex: 1; min-height: 0;
+      display: flex; align-items: center; gap: 8px;
+      width: max-content;
+      animation: scrollA 70s linear infinite;
+    }
+    .collage .strip.rev { animation-name: scrollB; }
+    .collage .strip img {
+      height: 100%; width: auto; display: block;
+      filter: saturate(0.95);
+    }
+    @keyframes scrollA { from { transform: translateX(0); }            to { transform: translateX(-33.333%); } }
+    @keyframes scrollB { from { transform: translateX(-33.333%); }     to { transform: translateX(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      .collage .strip { animation: none; }
+    }
 
     /* ---------- ANNOUNCEMENT BANNER ---------- */
     .announce {
@@ -192,7 +220,10 @@
 </head>
 <body>
 
-  <!-- ===== ANNOUNCEMENT BANNER (added on the 'spring-banner' branch) ===== -->
+  <!-- ===== FILM-ROLL COLLAGE BACKGROUND (filled by script below) ===== -->
+  <div class="collage" id="collage" aria-hidden="true"></div>
+
+  <!-- ===== ANNOUNCEMENT BANNER ===== -->
   <div class="announce">✨ Spring 2026 registration is now open — <a href="#register">sign up your player →</a></div>
 
   <!-- ===== HEADER ===== -->
@@ -402,6 +433,37 @@
   </footer>
 
   <script>
+    // ===== Build the film-roll collage background =====
+    // The 7 photos live in the /Images folder. Filenames have spaces, so we
+    // encode them. We make several horizontal strips, each holding the photo
+    // set repeated 3 times so it can scroll forever without a visible seam.
+    (function buildCollage() {
+      const files = [
+        'images.jpg', 'images (1).jpg', 'images (2).jpg', 'images (3).jpg',
+        'images (4).jpg', 'images (5).jpg', 'images (6).jpg'
+      ];
+      const collage = document.getElementById('collage');
+      const STRIPS = 6;
+      for (let s = 0; s < STRIPS; s++) {
+        const strip = document.createElement('div');
+        strip.className = 'strip' + (s % 2 ? ' rev' : '');
+        strip.style.animationDuration = (62 + s * 9) + 's';   // vary speed per row
+        // vary the order a little so rows don't line up
+        let order = files.slice();
+        for (let r = 0; r < s; r++) order.push(order.shift());
+        if (s % 2) order.reverse();
+        const seq = order.concat(order, order);               // 3 copies for seamless loop
+        seq.forEach((name) => {
+          const img = document.createElement('img');
+          img.src = encodeURI('Images/' + name);
+          img.alt = '';
+          img.loading = 'lazy';
+          strip.appendChild(img);
+        });
+        collage.appendChild(strip);
+      }
+    })();
+
     // Mobile menu toggle
     const toggle = document.getElementById('menuToggle');
     const links = document.getElementById('navLinks');
