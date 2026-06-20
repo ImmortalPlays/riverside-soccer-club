@@ -214,7 +214,11 @@
       .nav-links a { padding: 12px 22px; }
       .nav-links .btn { margin: 8px 22px; text-align: center; }
       .menu-toggle { display: block; }
-      .stats { gap: 26px; }
+      /* Center the hero on phones so it doesn't hug the left edge */
+      .hero-inner { text-align: center; max-width: none; }
+      .hero p { margin-left: auto; margin-right: auto; }
+      .hero-cta { justify-content: center; }
+      .stats { justify-content: center; gap: 26px; }
     }
   </style>
 </head>
