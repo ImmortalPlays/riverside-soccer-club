@@ -15,7 +15,6 @@
       --navy-soft: #16314c;
       --gold: #f6c343;
       --ink: #1f2937;
-      --muted: #5b6ب72;      /* fixed below */
       --muted: #5b6b82;
       --line: #e5e9f0;
       --bg: #ffffff;
@@ -38,6 +37,13 @@
     .lead { color: var(--muted); max-width: 640px; margin-bottom: 34px; }
     .eyebrow { color: var(--green); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; }
     a { color: var(--green-dark); }
+
+    /* ---------- ANNOUNCEMENT BANNER ---------- */
+    .announce {
+      background: var(--gold); color: var(--navy); text-align: center;
+      font-weight: 700; font-size: 0.92rem; padding: 9px 16px;
+    }
+    .announce a { color: var(--navy); text-decoration: underline; }
 
     /* ---------- BUTTONS ---------- */
     .btn {
@@ -80,7 +86,6 @@
         radial-gradient(1200px 500px at 80% -10%, rgba(21,163,74,0.55), transparent 60%),
         linear-gradient(160deg, var(--navy) 0%, var(--navy-soft) 100%);
     }
-    /* subtle pitch lines */
     .hero::after {
       content: ""; position: absolute; inset: 0; opacity: 0.08;
       background-image: repeating-linear-gradient(90deg, #fff 0 2px, transparent 2px 90px);
@@ -186,6 +191,9 @@
   </style>
 </head>
 <body>
+
+  <!-- ===== ANNOUNCEMENT BANNER (added on the 'spring-banner' branch) ===== -->
+  <div class="announce">✨ Spring 2026 registration is now open — <a href="#register">sign up your player →</a></div>
 
   <!-- ===== HEADER ===== -->
   <header>
